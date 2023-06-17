@@ -4,19 +4,19 @@ const { nanoid } = require("nanoid");
 
 const contactsPath = path.join("./db/contacts.json");
 
-const getAll = async () => {
+const listContacts = async () => {
   const data = await fs.readFile(contactsPath);
   return JSON.parse(data);
 };
 
-const getById = async (id) => {
-  const contacts = await getAll();
+const getContactById = async (id) => {
+  const contacts = await listContacts();
   const result = contacts.find((item) => item.id === id);
   return result || null;
 };
 
-const add = async (data) => {
-  const contacts = await getAll();
+const addContact = async (data) => {
+  const contacts = await listContacts();
   const newContact = {
     id: nanoid(),
     ...data,
@@ -26,19 +26,8 @@ const add = async (data) => {
   return newContact;
 };
 
-const updateById = async (id, data) => {
-  const contacts = await getAll();
-  const index = contacts.findIndex((item) => item.id === id);
-  if (index === -1) {
-    return null;
-  }
-  contacts[index] = { id, ...data };
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return contacts[index];
-};
-
-const removeById = async (id) => {
-  const contacts = await getAll();
+const removeContact = async (id) => {
+  const contacts = await listContacts();
   const index = contacts.findIndex((item) => item.id === id);
   if (index === -1) {
     return null;
@@ -49,9 +38,8 @@ const removeById = async (id) => {
 };
 
 module.exports = {
-  getAll,
-  getById,
-  add,
-  updateById,
-  removeById,
+  listContacts,
+  getContactById,
+  addContact,
+  removeContact,
 };
